@@ -264,11 +264,11 @@ export default function NavBar() {
   const isAdmin = userData?.role === 'admin';
   const isUser = userData?.role === 'student' || userData?.role === 'user';
 
-  const renderUserAvatar = (size = 'w-9 h-9', textSize = 'text-sm') => {
+  const renderUserAvatar = (size = 'w-12 h-12 sm:w-14 sm:h-14', textSize = 'text-sm sm:text-base') => {
     if (loading) {
       return (
-        <div className={`${size} bg-zinc-200 rounded-full flex items-center justify-center animate-pulse`}>
-          <Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
+        <div className={`${size} rounded-full flex items-center justify-center animate-pulse shadow-lg border-2 border-white/30 bg-white/20`}>
+          <Loader2 className="w-5 h-5 text-zinc-400 animate-spin" />
         </div>
       );
     }
@@ -278,18 +278,18 @@ export default function NavBar() {
         <img
           src={userData.avatar}
           alt={userData.displayName}
-          className={`${size} rounded-full object-cover border border-zinc-200`}
+          className={`${size} rounded-full object-cover shadow-lg border-2 border-white/30`}
         />
       );
     }
 
     const gradientClass = isAdmin
       ? 'bg-gradient-to-br from-red-500 to-orange-600'
-      : 'bg-zinc-900';
+      : 'bg-gradient-to-br from-indigo-500 to-purple-600';
 
     return (
-      <div className={`${size} ${gradientClass} rounded-full flex items-center justify-center shadow-sm`}>
-        <span className={`text-white font-medium ${textSize}`}>
+      <div className={`${size} ${gradientClass} rounded-full flex items-center justify-center shadow-lg border-2 border-white/30`}>
+        <span className={`text-white font-bold ${textSize}`}>
           {userData?.initials || (isAdmin ? 'A' : 'U')}
         </span>
       </div>
@@ -337,17 +337,14 @@ export default function NavBar() {
 
   const renderLogo = () => {
     return (
-      <div className="flex items-center space-x-3 flex-shrink-0 cursor-pointer group" onClick={() => navigate(isAdmin ? '/admin' : '/')}>
-        <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center overflow-hidden rounded-full shadow-sm transition-transform duration-300 group-hover:scale-105">
+      <div className="flex items-center flex-shrink-0 cursor-pointer group" onClick={() => navigate(isAdmin ? '/admin' : '/')}>
+        <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center overflow-hidden rounded-full shadow-lg border-2 border-white/30 transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl">
           <img
             src="https://res.cloudinary.com/druvxcll9/image/upload/v1761122530/WhatsApp_Image_2025-09-02_at_12.45.18_b15791ea_rnlwrz_3_r4kp2u.jpg"
             alt="Logo"
             className="w-full h-full object-cover"
           />
         </div>
-        <span className="text-lg sm:text-xl font-light tracking-wider text-zinc-900 group-hover:text-zinc-700 transition-colors">
-          {isAdmin ? 'CodeSapiens Admin' : 'CodeSapiens'}
-        </span>
       </div>
     );
   };
@@ -513,7 +510,7 @@ export default function NavBar() {
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
           ref={mobileMenuRef}
-          className="md:hidden border-t border-zinc-100 py-4 space-y-2 bg-white/95 backdrop-blur-md overflow-hidden"
+          className="md:hidden border-t border-zinc-200/50 py-4 space-y-2 overflow-hidden"
         >
           {isAdmin && (
             <>
@@ -546,10 +543,10 @@ export default function NavBar() {
 
 
           {/* Mobile User Info */}
-          <div className="border-t border-zinc-100 pt-4 mt-4">
+          <div className="border-t border-zinc-200/50 pt-4 mt-4">
             <div className="px-4 py-2">
               <div className="flex items-center space-x-3 mb-3">
-                {renderUserAvatar('w-10 h-10')}
+                {renderUserAvatar('w-12 h-12', 'text-sm')}
                 <div>
                   {renderUserInfo()}
                 </div>
@@ -600,75 +597,75 @@ export default function NavBar() {
 
   return (
     <>
-      <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-zinc-200/50 sticky top-0 z-50 w-full transition-all duration-300">
-        <div className="w-full px-6 lg:px-8">
-          <div className="flex items-center justify-between h-[70px]">
-            {/* Logo Section */}
-            {renderLogo()}
+      <div className="fixed top-0 left-0 right-0 z-50 flex justify-center p-4">
+        <nav className="bg-white/70 backdrop-blur-2xl shadow-2xl rounded-full border border-white/40 transition-all duration-300 max-w-7xl w-full">
+          <div className="px-2">
+            <div className="flex items-center justify-between h-[70px]">
+              {/* Logo Section */}
+              {renderLogo()}
 
-            {/* Desktop Navigation - Centered */}
-            {renderDesktopNavigation()}
+              {/* Desktop Navigation - Centered */}
+              {renderDesktopNavigation()}
 
-            {/* Right Section */}
-            <div className="flex items-center space-x-4 flex-shrink-0">
-              {/* User Profile Section */}
-              <div className="relative">
+              {/* Right Section */}
+              <div className="flex items-center  flex-shrink-0">
+                {/* User Profile Section */}
+                <div className="relative">
+                  <button
+                    ref={profileButtonRef}
+                    onClick={toggleProfileDropdown}
+                    className="transition-all duration-300 hover:scale-105"
+                    disabled={loading}
+                  >
+                    {renderUserAvatar()}
+                  </button>
+                </div>
+
+                {/* Mobile Menu Button */}
                 <button
-                  ref={profileButtonRef}
-                  onClick={toggleProfileDropdown}
-                  className="flex items-center space-x-3 p-1.5 rounded-full hover:bg-zinc-100 transition-colors group"
-                  disabled={loading}
+                  onClick={toggleMobileMenu}
+                  className="md:hidden p-2 text-zinc-600 hover:text-zinc-900 hover:bg-white/50 rounded-full transition-all"
                 >
-                  {renderUserAvatar()}
-                  <div className="hidden lg:flex items-center space-x-1">
-                    {renderUserInfo()}
-                    <ChevronDown className={`w-4 h-4 text-zinc-400 ml-1 transition-transform duration-300 ${isProfileDropdownOpen ? 'rotate-180' : ''} group-hover:text-zinc-600`} />
-                  </div>
+                  {isMobileMenuOpen ? (
+                    <X className="w-6 h-6" />
+                  ) : (
+                    <Menu className="w-6 h-6" />
+                  )}
                 </button>
-              </div>
-
-              {/* Mobile Menu Button */}
-              <button
-                onClick={toggleMobileMenu}
-                className="md:hidden p-2 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
-              >
-                {isMobileMenuOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
-                )}
-              </button>
             </div>
           </div>
-
-          {/* Mobile Navigation Menu */}
-          {renderMobileMenu()}
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {renderMobileMenu()}
 
         {/* Error Display */}
         {error && (
-          <div className="bg-red-50 border-b border-red-200 px-6 py-2">
-            <p className="text-red-700 text-sm">
+          <div className="bg-red-50 border border-red-200 rounded-full px-6 py-2 mt-2">
+            <p className="text-red-700 text-sm text-center">
               Failed to load user data: {error}
             </p>
           </div>
         )}
-
-        {/* Breadcrumbs */}
-        <BreadCrumbs />
       </nav>
+    </div>
 
-      {/* Profile Dropdown - Rendered as a portal */}
-      {renderProfileDropdown()}
+    {/* Breadcrumbs - Below navbar */}
+    {/* <div className="pt-20 px-4">
+      <BreadCrumbs />
+    </div> */}
 
-      {/* Backdrop for desktop screens - only show on desktop when dropdown is open */}
-      {isProfileDropdownOpen && window.innerWidth >= 768 && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsProfileDropdownOpen(false)}
-          style={{ pointerEvents: 'auto' }}
-        />
-      )}
-    </>
-  );
+    {/* Profile Dropdown - Rendered as a portal */}
+    {renderProfileDropdown()}
+
+    {/* Backdrop for desktop screens - only show on desktop when dropdown is open */}
+    {isProfileDropdownOpen && window.innerWidth >= 768 && (
+      <div
+        className="fixed inset-0 z-40"
+        onClick={() => setIsProfileDropdownOpen(false)}
+        style={{ pointerEvents: 'auto' }}
+      />
+    )}
+  </>
+);
 }
