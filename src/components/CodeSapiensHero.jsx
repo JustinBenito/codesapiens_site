@@ -32,7 +32,7 @@ const PhotoStackShowcase = () => {
             images: [
                 "https://res.cloudinary.com/druvxcll9/image/upload/v1761122531/users_cme79i2lk00qls401ar5qxqnc_tYvYry0ll1qJY9Cr-sZlcWmpyKLCEVr3R-WhatsApp25202025-08-10252015.15.02_25567a3d_c0frk5_dpl25k.jpg",
                 "https://res.cloudinary.com/druvxcll9/image/upload/v1761122957/users_cme79i2lk00qls401ar5qxqnc_OadwAYSr5ySuegEn-IMG-20250914-WA0012_gvyeye_n1s3az.jpg",
-                "https://res.cloudinary.com/druvxcll9/image/upload/v1761122991/1753106111524_wqepam_wam1st.jpg",
+                "https://res.cloudinary.com/druvxcll9/image/upload/v1761122957/users_cme79i2lk00qls401ar5qxqnc_OadwAYSr5ySuegEn-IMG-20250914-WA0012_gvyeye_n1s3az.jpg",
             ],
             category: "EVENTS",
             title: "2025",
@@ -41,8 +41,8 @@ const PhotoStackShowcase = () => {
         {
             images: [
                 "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop",
-                "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop",
-                "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2070&auto=format&fit=crop",
+                "https://res.cloudinary.com/druvxcll9/image/upload/v1761122532/width_800_pmtms3_cqtzrn.webp",
+                "https://i.ibb.co/DHyS4T9Z/image-1768732913303.jpg",
             ],
             category: "UPCOMING",
             title: "2026",
@@ -654,6 +654,8 @@ const CodeSapiensHero = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [hallOfFameEntries, setHallOfFameEntries] = useState([]);
     const [communityPhotos, setCommunityPhotos] = useState([]);
+    const [isOverHero, setIsOverHero] = useState(true);
+    const heroRef = useRef(null);
 
     // Data Fetching
     useEffect(() => {
@@ -665,6 +667,22 @@ const CodeSapiensHero = () => {
             if (photos) setCommunityPhotos(photos);
         };
         fetchData();
+    }, []);
+
+    // Detect if navbar is over hero section
+    useEffect(() => {
+        const handleScroll = () => {
+            if (heroRef.current) {
+                const heroBottom = heroRef.current.offsetHeight;
+                const scrollPosition = window.scrollY;
+                // Navbar is "over hero" if we haven't scrolled past the hero section
+                setIsOverHero(scrollPosition < heroBottom - 100);
+            }
+        };
+
+        handleScroll(); // Initial check
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     // Scroll Progress
@@ -690,28 +708,29 @@ const CodeSapiensHero = () => {
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122531/JWz1OvtKurqSRsC7-WhatsApp202025-08-312011.22.52_bff7c8bd_mrok7q_b6meyd.jpg", name: "Vignesh R", link: "https://www.linkedin.com/in/vignesh-r-7727582b7" },
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122532/3S8YnOu77Rt2wDJD-WhatsApp202025-08-312010.32.42_9b5cee10_puasao_zekkfa.jpg", name: "Anand S", link: "https://codesapiens-management-website.vercel.app" },
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122531/q5tsA3KUOwgSOpIa-team_5.efc764325a5ffbaf1b6e_1_sidv9r_fhxmqv.jpg", name: "Subhaharini P", link: "https://www.linkedin.com/in/subhaharini-p-938568254" },
-        { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122531/1732031130575_b834gr_1_slc9fw.jpg", name: "Jayasurya R", link: "https://www.linkedin.com/in/jayasurya-r-b37997279/" }
+        { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122531/1732031130575_b834gr_1_slc9fw.jpg", name: "Jayasurya R", link: "https://www.linkedin.com/in/jayasurya-r-b37997279/" },
+        { photo: "https://i.ibb.co/fdfnxtcX/qm-copy.png", name: "YOU", link: "https://www.linkedin.com/in/sundarpichai" }
     ];
 
     return (
         <div className="bg-[#F7F5F2] text-[#1E1919] min-h-screen font-sans overflow-x-hidden selection:bg-[#0061FE] selection:text-white">
-            {/* Navigation - Floating Frosted Glass Pill with Inverse Text */}
+            {/* Navigation - Floating Frosted Glass Pill with Dynamic Text Color */}
             <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-4xl">
                 <div className="bg-white/10 backdrop-blur-xl rounded-full px-6 py-4 border border-black/10 shadow-2xl">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
-                            <img src="https://res.cloudinary.com/dqudvximt/image/upload/v1756797708/WhatsApp_Image_2025-09-02_at_12.45.18_b15791ea_rnlwrz.jpg" alt="CodeSapiens Logo" className="w-8 h-8 rounded-full object-cover mix-blend-normal" />
-                            <span className="text-lg font-bold tracking-tight mix-blend-difference invert">CodeSapiens</span>
+                            <img src="https://res.cloudinary.com/dqudvximt/image/upload/v1756797708/WhatsApp_Image_2025-09-02_at_12.45.18_b15791ea_rnlwrz.jpg" alt="CodeSapiens Logo" className="w-8 h-8 rounded-full object-cover" />
+                            <span className={`text-lg font-bold tracking-tight transition-colors duration-300 ${isOverHero ? 'text-white' : 'text-black'}`}>CodeSapiens</span>
                         </div>
                         <div className="hidden md:flex items-center gap-6 font-medium text-sm">
-                            <a href="#vision" className="mix-blend-difference invert transition-opacity">Vision</a>
-                            <a href="#events" className="mix-blend-difference invert transition-opacity">Events</a>
-                            <a href="#community" className="mix-blend-difference invert transition-opacity">Community</a>
+                            <a href="#vision" className={`transition-colors duration-300 ${isOverHero ? 'text-white hover:text-white/80' : 'text-black hover:text-black/70'}`}>Vision</a>
+                            <a href="#events" className={`transition-colors duration-300 ${isOverHero ? 'text-white hover:text-white/80' : 'text-black hover:text-black/70'}`}>Events</a>
+                            <a href="#community" className={`transition-colors duration-300 ${isOverHero ? 'text-white hover:text-white/80' : 'text-black hover:text-black/70'}`}>Community</a>
                             <button onClick={() => navigate('/auth')} className="bg-[#0061FE] text-white px-6 py-2 rounded-full hover:bg-[#0051DE] transition-colors font-bold shadow-lg">
                                 Get Started
                             </button>
                         </div>
-                        <button className="md:hidden mix-blend-difference invert" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                        <button className={`md:hidden transition-colors duration-300 ${isOverHero ? 'text-white' : 'text-black'}`} onClick={() => setIsMenuOpen(!isMenuOpen)}>
                             {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
                         </button>
                     </div>
@@ -733,7 +752,7 @@ const CodeSapiensHero = () => {
             )}
 
             {/* Hero Section */}
-            <section className="relative min-h-screen bg-[#000000] text-white flex items-center overflow-hidden">
+            <section ref={heroRef} className="relative min-h-screen bg-[#000000] text-white flex items-center overflow-hidden">
                 {/* FaultyTerminal Background */}
                 <div className="absolute inset-0 z-0 w-full h-full">
                     <div className="w-full h-full bg-blur-sm">
@@ -816,13 +835,13 @@ const CodeSapiensHero = () => {
                 </div>
 
                 {/* Scroll Indicator */}
-                <motion.div
+                {/* <motion.div
                     animate={{ y: [0, 10, 0] }}
                     transition={{ repeat: Infinity, duration: 2 }}
                     className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 text-white/50 z-10 pointer-events-none"
                 >
                     <ChevronDown size={32} />
-                </motion.div>
+                </motion.div> */}
             </section>
 
             {/* Photo Stack Cards Section */}

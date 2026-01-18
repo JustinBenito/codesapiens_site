@@ -484,7 +484,7 @@ const portfolioData = [
   },
   {
     title: "Socials",
-    gradient: "linear-gradient(135deg, #667eea, #764ba2)",
+    gradient: "linear-gradient(135deg, #e73827, #f85032)",
     projects: [
       { 
         id: "social1", 
@@ -547,7 +547,7 @@ export default function ThreeDFolderDemo() {
   return (
     <main className=" transition-colors duration-500 selection:bg-opacity-30" 
     style={{ 
-      backgroundColor: 'hsl(var(--background))', 
+      backgroundColor: '#F7F5F2', 
       color: 'hsl(var(--foreground))'
     }}>
       {/* <header className="sticky top-0 z-40 w-full backdrop-blur-xl border-b transition-colors duration-500"
