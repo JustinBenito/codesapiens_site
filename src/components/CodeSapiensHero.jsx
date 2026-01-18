@@ -11,6 +11,7 @@ import { PhotoStackCard } from './ui/PhotoStackCard';
 import ThreeDFolderDemo from './ui/3d-folder';
 import FooterTapedDesign from './ui/footer-taped-design';
 import ImageTiles from './ui/image-tiles';
+import { EffectScene } from './EffectScene';
 
 // --- Photo Stack Showcase Section ---
 const PhotoStackShowcase = () => {
@@ -703,9 +704,9 @@ const CodeSapiensHero = () => {
                             <span className="text-lg font-bold tracking-tight mix-blend-difference invert">CodeSapiens</span>
                         </div>
                         <div className="hidden md:flex items-center gap-6 font-medium text-sm">
-                            <a href="#vision" className="mix-blend-difference invert opacity-90 hover:opacity-100 transition-opacity">Vision</a>
-                            <a href="#events" className="mix-blend-difference invert opacity-90 hover:opacity-100 transition-opacity">Events</a>
-                            <a href="#community" className="mix-blend-difference invert opacity-90 hover:opacity-100 transition-opacity">Community</a>
+                            <a href="#vision" className="mix-blend-difference invert transition-opacity">Vision</a>
+                            <a href="#events" className="mix-blend-difference invert transition-opacity">Events</a>
+                            <a href="#community" className="mix-blend-difference invert transition-opacity">Community</a>
                             <button onClick={() => navigate('/auth')} className="bg-[#0061FE] text-white px-6 py-2 rounded-full hover:bg-[#0051DE] transition-colors font-bold shadow-lg">
                                 Get Started
                             </button>
@@ -735,7 +736,7 @@ const CodeSapiensHero = () => {
             <section className="relative min-h-screen bg-[#000000] text-white flex items-center overflow-hidden">
                 {/* FaultyTerminal Background */}
                 <div className="absolute inset-0 z-0 w-full h-full">
-                    <div className="w-full h-full">
+                    <div className="w-full h-full bg-blur-sm">
                         <FaultyTerminal
                             scale={1}
                             gridMul={[2, 1]}
@@ -747,7 +748,7 @@ const CodeSapiensHero = () => {
                             chromaticAberration={0}
                             dither={0.4}
                             curvature={0.05}
-                            tint="#8FBC8F"
+                            tint="#fff1c5"
                             mouseReact={true}
                             mouseStrength={0.4}
                             brightness={1.2}
@@ -755,9 +756,14 @@ const CodeSapiensHero = () => {
                             style={{ width: '100%', height: '100%' }}
                         />
                     </div>
-                    {/* Overlay gradient for better text readability */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 backdrop-blur-sm pointer-events-none"></div>
                 </div>
+
+                {/* COMMENTED OUT - ASCII Effect Background (Keep for reference) */}
+                {/* <div className="absolute inset-0 z-0 w-full h-full">
+                    <EffectScene />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 pointer-events-none"></div>
+                </div> */}
 
                 {/* Content */}
                 <div className="container mx-auto px-4 sm:px-6 relative z-10 pt-20 pointer-events-none">
@@ -787,7 +793,7 @@ const CodeSapiensHero = () => {
 
                             {/* Subtext */}
                             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/60 max-w-3xl mx-auto leading-relaxed mb-10 sm:mb-12 px-4">
-                                Join codesapiens TNs community run by students for students.
+                                Join codesapiens TNs largest community run by<span className='font-bold text-white'> students</span> for <span className='font-bold text-white'>students</span>
                             </p>
 
                             {/* CTA Buttons - Frosted Glass Style */}

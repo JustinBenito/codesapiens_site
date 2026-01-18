@@ -11,8 +11,8 @@ export const FooterTapedDesign = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-   <footer className="my-8 px-4 max-w-5xl mx-auto">
-      <div className="relative bg-white rounded-3xl max-w-5xl mx-auto px-4 py-10 flex flex-col md:flex-row justify-between items-center gap-6 transform -rotate-1">
+   <footer className="my-16 mb-8 px-4 max-w-5xl mx-auto">
+      <div className="relative bg-white rounded-3xl max-w-5xl mx-auto px-4 py-10 flex flex-col md:flex-row justify-between items-center gap-6 transform rotate-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] backdrop-blur-xl">
         <div className="hidden md:block absolute -top-4 -left-8 w-[80px] h-[36px] scale-75">
           {tape}
         </div>
@@ -65,7 +65,7 @@ export const FooterTapedDesign = () => {
 
         </div>
       </div>
-      <div className="my-3 px-4 md:px-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-sm text-[#222222]">
+      <div className="my-6 px-4 mt-16 mb-16 md:px-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-sm text-[#222222]">
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-8 items-start sm:items-center">
           <p className="whitespace-nowrap">
             ©{currentYear} CodeSapiens. All rights reserved.

@@ -416,7 +416,7 @@ const AnimatedFolder = ({ title, projects, className, gradient }) => {
           style={{ 
             color: 'hsl(var(--muted-foreground))',
             opacity: isHovered ? 0.8 : 1 
-          }}>{projects.length} {projects.length === 1 ? 'project' : 'projects'}</p>
+          }}>{projects.length} {projects.length === 1 ? 'file' : 'files'}</p>
         </div>
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest transition-all duration-500" 
         style={{ 
@@ -468,17 +468,17 @@ const portfolioData = [
       { 
         id: "partner1", 
         image: "https://res.cloudinary.com/dqudvximt/image/upload/v1767817843/users_cme79i2lk00qls401ar5qxqnc_OGGz5HgXCzS9rI8H-users_clylc5w1v070to301jatq0e85_bNj4z9CoW02cMzqm-circle_rs5ttj.png", 
-        title: "Community Partner 1" 
+        title: "Chennai React" 
       },
       { 
         id: "partner2", 
         image: "https://res.cloudinary.com/dqudvximt/image/upload/v1767817844/users_cme79i2lk00qls401ar5qxqnc_EMRqmDnatuO4Rk38-users_cm9cf3ngn02erro015wogiktk_8CHW9Warth4BkBG9-Blue_2520Minimalist_2520Simple_2520Technology_2520Logo_2520_2520_1_mqig9s.png", 
-        title: "Community Partner 2" 
+        title: "D3 Community" 
       },
       { 
         id: "partner3", 
         image: "https://res.cloudinary.com/dqudvximt/image/upload/v1767817846/users_cme79i2lk00qls401ar5qxqnc_1KwVf1Iz3NmGXUQP-176333249_mhbrlj.webp", 
-        title: "Community Partner 3" 
+        title: "Namma Flutter" 
       },
     ]
   },
@@ -545,7 +545,7 @@ export default function ThreeDFolderDemo() {
   const toggleTheme = () => setIsDark(!isDark);
 
   return (
-    <main className="min-h-screen transition-colors duration-500 selection:bg-opacity-30" 
+    <main className=" transition-colors duration-500 selection:bg-opacity-30" 
     style={{ 
       backgroundColor: 'hsl(var(--background))', 
       color: 'hsl(var(--foreground))'
@@ -570,9 +570,9 @@ export default function ThreeDFolderDemo() {
         </div>
       </header> */}
 
-      <div className="max-w-7xl mx-auto pt-20 px-6 text-center">
+      <div className="max-w-7xl mx-auto pt-10 px-3 text-center">
         <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          Codesapiens <span className="italic" style={{ color: 'hsl(var(--primary))' }}>Community</span>
+          The Codesapiens <span className="italic" style={{ color: 'hsl(var(--primary))' }}>Files</span>
         </h1>
         <p className="text-lg max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150"
         style={{ color: 'hsl(var(--muted-foreground))' }}>
@@ -580,7 +580,7 @@ export default function ThreeDFolderDemo() {
         </p>
       </div>
 
-      <section className="max-w-7xl mx-auto px-6 pt-16 pb-32">
+      <section className="max-w-7xl mx-auto px-6 pt-8 pb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 justify-items-center">
           {portfolioData.map((folder, index) => (
             <div 
