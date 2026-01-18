@@ -5,7 +5,100 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ChevronDown, Menu, X, Github, Linkedin, Youtube, Users, Calendar, Code, Award, Crown, Rocket, Zap, Globe, Cpu, Handshake, Heart, ArrowUpRight, Instagram, Twitter, MessageCircle, Megaphone, Sparkles } from 'lucide-react';
 import { BACKEND_URL } from '../config';
 import { authFetch } from '../lib/authFetch';
-import LandingPopup from './LandingPopup';
+// import LandingPopup from './LandingPopup';
+import FaultyTerminal from './FaultyTerminal';
+import { PhotoStackCard } from './ui/PhotoStackCard';
+import ThreeDFolderDemo from './ui/3d-folder';
+import FooterTapedDesign from './ui/footer-taped-design';
+import ImageTiles from './ui/image-tiles';
+import { EffectScene } from './EffectScene';
+import SecretAgentTerminal from './ui/SecretAgentTerminal';
+
+// --- Photo Stack Showcase Section ---
+const PhotoStackShowcase = () => {
+    const [activeIndex, setActiveIndex] = useState(2); // Default to 2026 card
+
+    const memoriesData = [
+        {
+            images: [
+                "https://res.cloudinary.com/druvxcll9/image/upload/v1761122532/width_800_pmtms3_cqtzrn.webp",
+                "https://res.cloudinary.com/druvxcll9/image/upload/v1761122534/codesapiens_3_md0nvd_ceyry4.png",
+                "https://res.cloudinary.com/druvxcll9/image/upload/v1761122991/1753106111524_wqepam_wam1st.jpg",
+            ],
+            category: "MEMORIES",
+            title: "2024",
+            subtitle: "Summer of Code & More",
+        },
+        {
+            images: [
+                "https://res.cloudinary.com/druvxcll9/image/upload/v1761122531/users_cme79i2lk00qls401ar5qxqnc_tYvYry0ll1qJY9Cr-sZlcWmpyKLCEVr3R-WhatsApp25202025-08-10252015.15.02_25567a3d_c0frk5_dpl25k.jpg",
+                "https://res.cloudinary.com/druvxcll9/image/upload/v1761122957/users_cme79i2lk00qls401ar5qxqnc_OadwAYSr5ySuegEn-IMG-20250914-WA0012_gvyeye_n1s3az.jpg",
+                "https://res.cloudinary.com/druvxcll9/image/upload/v1761122957/users_cme79i2lk00qls401ar5qxqnc_OadwAYSr5ySuegEn-IMG-20250914-WA0012_gvyeye_n1s3az.jpg",
+            ],
+            category: "EVENTS",
+            title: "2025",
+            subtitle: "August & September Meetups",
+        },
+        {
+            images: [
+                "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop",
+                "https://res.cloudinary.com/druvxcll9/image/upload/v1761122532/width_800_pmtms3_cqtzrn.webp",
+                "https://i.ibb.co/DHyS4T9Z/image-1768732913303.jpg",
+            ],
+            category: "UPCOMING",
+            title: "2026",
+            subtitle: "Coming Soon",
+        },
+    ];
+
+    return (
+        <section className="py-24 bg-[#F7F5F2] dark:bg-black relative overflow-hidden">
+            <div className="container mx-auto px-6">
+                <div className="text-center mb-16">
+                    <h2 className="text-4xl md:text-5xl font-bold text-[#1E1919] dark:text-white mb-4">
+                        Our Journey
+                    </h2>
+                    <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                        Explore our community's evolution through the years
+                    </p>
+                </div>
+
+                {/* Mobile: Vertical Stack */}
+                <div className="md:hidden flex flex-col gap-8 items-center">
+                    {memoriesData.map((mem, index) => (
+                        <PhotoStackCard
+                            key={mem.title}
+                            {...mem}
+                            isActive={index === activeIndex}
+                            onClick={() => setActiveIndex(index)}
+                            className="w-80 h-80"
+                        />
+                    ))}
+                </div>
+
+                {/* Desktop: Horizontal Overlap */}
+                <div className="hidden md:flex relative h-96 w-full max-w-7xl items-center justify-center mx-auto">
+                    {memoriesData.map((mem, index) => (
+                        <div
+                            key={mem.title}
+                            className="absolute"
+                            style={{
+                                transform: `translateX(${(index - 1) * 450}px)`,
+                            }}
+                        >
+                            <PhotoStackCard
+                                {...mem}
+                                isActive={index === activeIndex}
+                                onClick={() => setActiveIndex(index)}
+                                className="w-80 h-80 md:w-96 md:h-96"
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+};
 
 // --- Stats Section ---
 const StatsSection = () => {
@@ -562,6 +655,22 @@ const CodeSapiensHero = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [hallOfFameEntries, setHallOfFameEntries] = useState([]);
     const [communityPhotos, setCommunityPhotos] = useState([]);
+    const [isOverHero, setIsOverHero] = useState(true);
+    const heroRef = useRef(null);
+    const [hasAccess, setHasAccess] = useState(false);
+
+    // Check if user has already completed the terminal challenge
+    useEffect(() => {
+        const accessGranted = localStorage.getItem('codesapiens_access_granted');
+        if (accessGranted === 'true') {
+            setHasAccess(true);
+        }
+    }, []);
+
+    const handleAccessGranted = () => {
+        localStorage.setItem('codesapiens_access_granted', 'true');
+        setHasAccess(true);
+    };
 
     // Data Fetching
     useEffect(() => {
@@ -573,6 +682,22 @@ const CodeSapiensHero = () => {
             if (photos) setCommunityPhotos(photos);
         };
         fetchData();
+    }, []);
+
+    // Detect if navbar is over hero section
+    useEffect(() => {
+        const handleScroll = () => {
+            if (heroRef.current) {
+                const heroBottom = heroRef.current.offsetHeight;
+                const scrollPosition = window.scrollY;
+                // Navbar is "over hero" if we haven't scrolled past the hero section
+                setIsOverHero(scrollPosition < heroBottom - 100);
+            }
+        };
+
+        handleScroll(); // Initial check
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     // Scroll Progress
@@ -592,154 +717,161 @@ const CodeSapiensHero = () => {
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122517/4SrLYdwh0tpuLlkt-team_2.a2a0c6917be79e15dc29_wjosq7_ftgm6j.jpg", name: "Justin Benito", link: "https://www.linkedin.com/in/justinbenito" },
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122517/nLDGxnsr6bZkCx0A-team_3.d2fd9099126beb0b86a1_vxhpxo_z3eods.jpg", name: "Koushik ram", link: "https://www.linkedin.com/in/koushik-ram-118495239" },
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122517/Tlgueu6loMYMKJMs-team_1.150894ea4376f6423091_vrf0fr_weljyi.jpg", name: "Athiram R S", link: "https://www.linkedin.com/in/athi-ram-rs" },
+        // Founder in the middle
+        { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122517/1679197646322_n1svjq_s5w42a.jpg", name: "Thiyaga B", role: "Founder", link: "https://www.linkedin.com/in/thiyagab/" },
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122516/5NmVUZRZI8sRCrZA-1735300455766_h8dhm2_dnully.jpg", name: "Pranav Vikraman", link: "https://www.linkedin.com/in/pranav-vikraman-322020242" },
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122531/JWz1OvtKurqSRsC7-WhatsApp202025-08-312011.22.52_bff7c8bd_mrok7q_b6meyd.jpg", name: "Vignesh R", link: "https://www.linkedin.com/in/vignesh-r-7727582b7" },
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122532/3S8YnOu77Rt2wDJD-WhatsApp202025-08-312010.32.42_9b5cee10_puasao_zekkfa.jpg", name: "Anand S", link: "https://codesapiens-management-website.vercel.app" },
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122531/q5tsA3KUOwgSOpIa-team_5.efc764325a5ffbaf1b6e_1_sidv9r_fhxmqv.jpg", name: "Subhaharini P", link: "https://www.linkedin.com/in/subhaharini-p-938568254" },
-        { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122531/1732031130575_b834gr_1_slc9fw.jpg", name: "Jayasurya R", link: "https://www.linkedin.com/in/jayasurya-r-b37997279/" }
+        { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122531/1732031130575_b834gr_1_slc9fw.jpg", name: "Jayasurya R", link: "https://www.linkedin.com/in/jayasurya-r-b37997279/" },
+        { photo: "https://i.ibb.co/fdfnxtcX/qm-copy.png", name: "YOU", link: "https://www.linkedin.com/in/sundarpichai" }
     ];
+
+    // If user hasn't completed the terminal challenge, show only the terminal
+    if (!hasAccess) {
+        return <SecretAgentTerminal onAccessGranted={handleAccessGranted} />;
+    }
 
     return (
         <div className="bg-[#F7F5F2] text-[#1E1919] min-h-screen font-sans overflow-x-hidden selection:bg-[#0061FE] selection:text-white">
-            {/* Navigation - Dark Mode for Hero */}
-            <nav className="fixed top-0 w-full z-50 bg-[#101010]/90 backdrop-blur-md text-white border-b border-white/10">
-                <div className="container mx-auto px-6 py-6 flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                        <img src="https://res.cloudinary.com/dqudvximt/image/upload/v1756797708/WhatsApp_Image_2025-09-02_at_12.45.18_b15791ea_rnlwrz.jpg" alt="CodeSapiens Logo" className="w-10 h-10 rounded-full object-cover" />
-                        <span className="text-xl font-bold tracking-tight">CodeSapiens</span>
-                    </div>
-                    <div className="hidden md:flex items-center gap-8 font-medium text-golden-1">
-                        <a href="#vision" className="hover:text-[#0061FE] transition-colors">Vision</a>
-                        <a href="#events" className="hover:text-[#0061FE] transition-colors">Events</a>
-                        <a href="#community" className="hover:text-[#0061FE] transition-colors">Community</a>
-                        <button onClick={() => navigate('/auth')} className="hover:text-[#0061FE]">Log in</button>
-                        <button onClick={() => navigate('/auth')} className="bg-white text-black px-5 py-2.5 rounded-sm hover:bg-gray-200 transition-colors font-bold">
-                            Get Started
+            {/* Navigation - Floating Frosted Glass Pill with Dynamic Text Color */}
+            <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-4xl">
+                <div className="bg-white/10 backdrop-blur-xl rounded-full px-6 py-4 border border-black/10 shadow-2xl">
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                            <img src="https://res.cloudinary.com/dqudvximt/image/upload/v1756797708/WhatsApp_Image_2025-09-02_at_12.45.18_b15791ea_rnlwrz.jpg" alt="CodeSapiens Logo" className="w-8 h-8 rounded-full object-cover" />
+                            <span className={`text-lg font-bold tracking-tight transition-colors duration-300 ${isOverHero ? 'text-white' : 'text-black'}`}>CodeSapiens</span>
+                        </div>
+                        <div className="hidden md:flex items-center gap-6 font-medium text-sm">
+                            <a href="#vision" className={`transition-colors duration-300 ${isOverHero ? 'text-white hover:text-white/80' : 'text-black hover:text-black/70'}`}>Vision</a>
+                            <a href="#events" className={`transition-colors duration-300 ${isOverHero ? 'text-white hover:text-white/80' : 'text-black hover:text-black/70'}`}>Events</a>
+                            <a href="#community" className={`transition-colors duration-300 ${isOverHero ? 'text-white hover:text-white/80' : 'text-black hover:text-black/70'}`}>Community</a>
+                            <button onClick={() => navigate('/auth')} className="bg-[#0061FE] text-white px-6 py-2 rounded-full hover:bg-[#0051DE] transition-colors font-bold shadow-lg">
+                                Get Started
+                            </button>
+                        </div>
+                        <button className={`md:hidden transition-colors duration-300 ${isOverHero ? 'text-white' : 'text-black'}`} onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
                         </button>
                     </div>
-                    <button className="md:hidden text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                        {isMenuOpen ? <X /> : <Menu />}
-                    </button>
                 </div>
             </nav>
 
             {/* Mobile Menu */}
             {isMenuOpen && (
-                <div className="fixed inset-0 z-40 bg-[#101010] text-white pt-24 px-6 md:hidden">
-                    <div className="flex flex-col gap-6 text-golden-2 font-bold">
-                        <a href="#vision" onClick={() => setIsMenuOpen(false)}>Vision</a>
-                        <a href="#events" onClick={() => setIsMenuOpen(false)}>Events</a>
-                        <a href="#community" onClick={() => setIsMenuOpen(false)}>Community</a>
-                        <button onClick={() => navigate('/auth')} className="text-left text-[#0061FE]">Log in</button>
+                <div className="fixed inset-0 z-40 bg-black/90 backdrop-blur-xl text-white pt-32 px-6 md:hidden">
+                    <div className="flex flex-col gap-6 text-xl font-bold">
+                        <a href="#vision" onClick={() => setIsMenuOpen(false)} className="hover:text-white/60 transition-colors">Vision</a>
+                        <a href="#events" onClick={() => setIsMenuOpen(false)} className="hover:text-white/60 transition-colors">Events</a>
+                        <a href="#community" onClick={() => setIsMenuOpen(false)} className="hover:text-white/60 transition-colors">Community</a>
+                        <button onClick={() => navigate('/auth')} className="bg-white/90 backdrop-blur-md text-black px-6 py-3 rounded-full hover:bg-white transition-colors font-bold shadow-lg text-left">
+                            Get Started
+                        </button>
                     </div>
                 </div>
             )}
 
             {/* Hero Section */}
-            <section className="relative min-h-screen bg-[#101010] text-white flex items-center overflow-hidden">
-                <div className="absolute inset-0 z-0 opacity-20"
-                    style={{
-                        backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)',
-                        backgroundSize: '50px 50px'
-                    }}>
+            <section ref={heroRef} className="relative min-h-screen bg-[#000000] text-white flex items-center overflow-hidden">
+                {/* FaultyTerminal Background */}
+                <div className="absolute inset-0 z-0 w-full h-full">
+                    <div className="w-full h-full bg-blur-sm">
+                        <FaultyTerminal
+                            scale={1}
+                            gridMul={[2, 1]}
+                            digitSize={1.5}
+                            scanlineIntensity={0.2}
+                            glitchAmount={0}
+                            flickerAmount={1}
+                            noiseAmp={0.3}
+                            chromaticAberration={0}
+                            dither={0.4}
+                            curvature={0.05}
+                            tint="#fff1c5"
+                            mouseReact={true}
+                            mouseStrength={0.4}
+                            brightness={1.2}
+                            className="w-full h-full"
+                            style={{ width: '100%', height: '100%' }}
+                        />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 backdrop-blur-sm pointer-events-none"></div>
                 </div>
-                <motion.div
-                    className="absolute inset-0 md:right-0 md:left-auto md:w-1/2 h-full pointer-events-none z-0 flex items-center justify-center md:justify-end"
-                    style={{ scale: shapeScale, y: shapeY, opacity: shapeOpacity }}
-                >
-                    <svg viewBox="0 0 800 800" className="w-full h-full md:w-full md:h-full opacity-40 md:opacity-60">
-                        <motion.path
-                            d="M400,200 L600,300 L400,400 L200,300 Z"
-                            fill="none" stroke="#0061FE" strokeWidth="1.5"
-                            initial={{ pathLength: 0, opacity: 0 }}
-                            animate={{ pathLength: 1, opacity: 1 }}
-                            transition={{ duration: 2, ease: "easeInOut" }}
-                        />
-                        <motion.path
-                            d="M400,400 L600,500 L400,600 L200,500 Z"
-                            fill="none" stroke="#F7F5F2" strokeWidth="1.5"
-                            initial={{ pathLength: 0, opacity: 1 }}
-                            animate={{ pathLength: 1, opacity: 1 }}
-                            transition={{ duration: 2, delay: 0.5, ease: "easeInOut" }}
-                        />
-                        <motion.path
-                            d="M400,600 L600,700 L400,800 L200,700 Z"
-                            fill="none" stroke="#9B0032" strokeWidth="1.5"
-                            initial={{ pathLength: 0, opacity: 0 }}
-                            animate={{ pathLength: 1, opacity: 1 }}
-                            transition={{ duration: 2, delay: 1, ease: "easeInOut" }}
-                        />
-                        <motion.line x1="200" y1="300" x2="200" y2="700" stroke="#333" strokeWidth="1" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 1 }} />
-                        <motion.line x1="600" y1="300" x2="600" y2="700" stroke="#333" strokeWidth="1" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 1 }} />
-                        <motion.line x1="400" y1="400" x2="400" y2="600" stroke="#333" strokeWidth="1" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 1 }} />
-                    </svg>
-                </motion.div>
 
-                <div className="container mx-auto px-6 relative z-10 pt-20">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                {/* COMMENTED OUT - ASCII Effect Background (Keep for reference) */}
+                {/* <div className="absolute inset-0 z-0 w-full h-full">
+                    <EffectScene />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 pointer-events-none"></div>
+                </div> */}
+
+                {/* Content */}
+                <div className="container mx-auto px-4 sm:px-6 relative z-10 pt-20 pointer-events-none">
+                    <div className="flex flex-col items-center justify-center min-h-screen text-center">
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
-                            className="max-w-4xl"
+                            className="max-w-5xl mx-auto"
                         >
-                            <h1 className="text-5xl md:text-7xl font-extrabold leading-[1] tracking-tighter mb-8 font-archivo-black">
-                                CodeSapiens<span className="text-[#0061FE]">.</span>
-                            </h1>
-                            <p className="text-golden-1 text-gray-400 max-w-2xl leading-relaxed mb-10 font-light">
-                                The Biggest Student-Run Tech Community in TN.<br />
-                                <span className="text-white block mt-2">The only 'Inter-college students community' by the students for the students</span>
-                                <span className="text-gray-400 block mt-4 text-golden-1 italic">
-                                    We are here to help students build a career in Tech who say, <br />
-                                    <span className="text-white not-italic">“Perusa Pannanum, but enna Pannanum Therla”</span> <br />
-                                    ("Want to do something big, but don't know what to do").
+                            {/* Main Heading with Coolvetica Font */}
+                            <h1
+                                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-normal mb-6 sm:mb-8 text-white"
+                                style={{
+                                    fontFamily: "'Coolvetica', sans-serif",
+                                    lineHeight: '1.1'
+                                }}
+                            >
+                                Vaalka Adichaalum Midhichaalum <br className="" />
+                                <span
+                                    className="text-white tracking-tighter italic"
+                                    style={{ fontFamily: "'Instrument Serif', serif" }}
+                                >
+                                    You never gave up
                                 </span>
+                            </h1>
+
+                            {/* Subtext */}
+                            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/60 max-w-3xl mx-auto leading-relaxed mb-10 sm:mb-12 px-4">
+                                Join codesapiens TNs largest community run by<span className='font-bold text-white'> students</span> for <span className='font-bold text-white'>students</span>
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-6">
-                                <button onClick={() => navigate('/auth')} className="bg-[#0061FE] text-white px-8 py-4 text-golden-1 font-bold rounded-sm hover:bg-[#0050d6] transition-all flex items-center justify-center gap-3 group">
-                                    Join Now <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+
+                            {/* CTA Buttons - Frosted Glass Style */}
+                            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pointer-events-auto">
+                                <button
+                                    onClick={() => navigate('/auth')}
+                                    className="w-full sm:w-auto bg-white/90 backdrop-blur-md text-black px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-bold rounded-full hover:bg-white transition-all flex items-center justify-center gap-3 group shadow-lg"
+                                >
+                                    Get Started <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                                 </button>
-
+                                <button
+                                    onClick={() => document.getElementById('vision').scrollIntoView({ behavior: 'smooth' })}
+                                    className="w-full sm:w-auto bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-bold rounded-full hover:bg-white/20 transition-all shadow-lg"
+                                >
+                                    Learn More
+                                </button>
                             </div>
-                        </motion.div>
-
-                        {/* Right: Dashboard Preview Image */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 1, delay: 0.4 }}
-                            className="relative mt-12 lg:mt-0"
-                        >
-                            <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-800 group transition-transform duration-500">
-                                <div className="absolute inset-0 bg-gradient-to-tr from-[#0061FE]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
-                                <img
-                                    src="https://res.cloudinary.com/dqudvximt/image/upload/v1766304825/preview-4_qcqokz.png"
-                                    alt="CodeSapiens Dashboard"
-                                    className="w-full h-auto object-cover"
-                                />
-                            </div>
-                            {/* Decorative Elements */}
-                            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#0061FE] rounded-full blur-[80px] opacity-30"></div>
-                            <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#9B0032] rounded-full blur-[80px] opacity-30"></div>
-
-                            {/* Badge Text */}
-                            <p className="text-gray-400 text-golden-1 italic text-right mt-4">Designed and built by students, for students.</p>
                         </motion.div>
                     </div>
                 </div>
-                <motion.div
+
+                {/* Scroll Indicator */}
+                {/* <motion.div
                     animate={{ y: [0, 10, 0] }}
                     transition={{ repeat: Infinity, duration: 2 }}
-                    className="absolute bottom-10 left-1/2 -translate-x-1/2 text-gray-500"
+                    className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 text-white/50 z-10 pointer-events-none"
                 >
                     <ChevronDown size={32} />
-                </motion.div>
+                </motion.div> */}
             </section>
 
+            {/* Photo Stack Cards Section */}
+            <PhotoStackShowcase />
 
+            {/* 3D Folders Section */}
+            <ThreeDFolderDemo />
 
-            {/* Vision Section */}
-            <section id="vision" className="bg-[#F7F5F2] text-[#1E1919] py-12 md:py-16 relative">
+            {/* Vision Section - HIDDEN */}
+            {/* <section id="vision" className="bg-[#F7F5F2] text-[#1E1919] py-12 md:py-16 relative">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 h-32 w-px bg-gradient-to-b from-[#101010] to-[#0061FE]"></div>
                 <div className="container mx-auto px-6">
                     <div className="grid md:grid-cols-2 gap-16 items-start">
@@ -774,14 +906,13 @@ const CodeSapiensHero = () => {
 
                     </div>
                 </div>
-            </section>
+            </section> */}
 
-            {/* Events Section - Community Moments */}
-            <section id="events" className="py-24 md:py-32 bg-white text-[#1E1919]">
+            {/* Events Section - Community Moments - HIDDEN */}
+            {/* <section id="events" className="py-24 md:py-32 bg-white text-[#1E1919]">
                 <div className="container mx-auto px-6">
 
 
-                    {/* Past Events Gallery */}
                     <div className="flex items-center justify-between mb-12">
                         <h3 className="text-golden-2 font-bold">Community Moments</h3>
                         <div className="flex gap-2">
@@ -801,18 +932,15 @@ const CodeSapiensHero = () => {
                                 transition={{ duration: 0.5, delay: i * 0.1 }}
                                 className="group relative overflow-hidden rounded-xl bg-[#2A2A2A] border border-gray-800"
                             >
-                                {/* Photo */}
                                 <div className="aspect-[4/3] overflow-hidden">
                                     <img
                                         src={photo.image_url}
                                         alt={photo.title}
                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                     />
-                                    {/* Overlay */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
                                 </div>
 
-                                {/* Content Overlay */}
                                 <div className="absolute bottom-0 left-0 w-full p-6">
                                     <h4 className="text-white font-bold text-lg mb-1">{photo.title}</h4>
                                     <p className="text-gray-300 text-sm">{photo.description || photo.date}</p>
@@ -821,21 +949,19 @@ const CodeSapiensHero = () => {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section> */}
 
-            {/* Stats Section */}
-            {/* Stats Section */}
-            <StatsSection />
+            {/* Stats Section - HIDDEN */}
+            {/* <StatsSection /> */}
 
-            {/* Sponsor Section */}
-            {/* Sponsor Section */}
-            <SponsorSection />
+            {/* Sponsor Section - HIDDEN */}
+            {/* <SponsorSection />
             <CommunityPartners />
             <SocialMediaSection />
-            <NoticeSection />
+            <NoticeSection /> */}
 
             {/* Hall of Fame */}
-            <section className="py-32 bg-[#0061FE] text-white overflow-hidden relative">
+            {/* <section className="py-32 bg-[#0061FE] text-white overflow-hidden relative">
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="text-center mb-20">
@@ -864,98 +990,34 @@ const CodeSapiensHero = () => {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             {/* Team / Mafia Gang */}
-            <section id="community" className="py-8 md:py-16 bg-[#F7F5F2] text-[#1E1919]">
-                <div className="container mx-auto px-6 text-center">
+            {/* <section id="community" className="py-8 md:py-16 bg-[#F7F5F2] dark:bg-black text-[#1E1919] dark:text-white">
+                <div className="container mx-auto max-w-6xl px-6 text-center">
                     <span className="text-[#0061FE] font-bold tracking-widest uppercase text-xs md:text-sm text-golden-1 mb-2 block">Community</span>
-                    <h2 className="text-2xl md:text-4xl text-golden-2 md:text-golden-3 font-bold mb-3">The Mafia Gang</h2>
-                    <p className="text-golden-1 text-gray-600 text-sm md:text-base max-w-2xl mx-auto mb-8">
+                    <h2 className="text-2xl md:text-4xl text-golden-2 md:text-golden-3 font-bold mb-3 dark:text-white">The Mafia Gang</h2>
+                    <p className="text-golden-1  text-gray-600 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto mt-4 mb-16">
                         Meet the core members who run the community. We are students, just like you.
                     </p>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-y-6 gap-x-2 md:gap-x-4">
-                        {/* Founder */}
-                        <div className="col-span-2 md:col-span-1 flex flex-col items-center group">
-                            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden mb-3 border-4 border-[#FA5D00] shadow-lg group-hover:scale-105 transition-transform">
-                                <img src="https://res.cloudinary.com/druvxcll9/image/upload/v1761122517/1679197646322_n1svjq_s5w42a.jpg" alt="Thiyaga B" className="w-full h-full object-cover" />
-                            </div>
-                            <h3 className="font-bold text-golden-2 mb-0.5 text-sm md:text-base">Thiyaga B</h3>
-                            <p className="text-[#FA5D00] text-golden-1 font-bold uppercase tracking-widest text-[10px] md:text-xs mb-1">Founder</p>
-                            <a href="https://www.linkedin.com/in/thiyagab/" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#0061FE] transition-colors"><Linkedin size={14} /></a>
-                        </div>
-                        {volunteers.map((vol, i) => (
-                            <motion.div
-                                key={i}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: i * 0.05 }}
-                                className="flex flex-col items-center group"
-                            >
-                                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden mb-2 grayscale group-hover:grayscale-0 transition-all duration-500 border-2 border-transparent group-hover:border-[#0061FE] shadow-md">
-                                    <img src={vol.photo} alt={vol.name} className="w-full h-full object-cover" />
-                                </div>
-                                <h3 className="font-bold text-golden-1 mb-0.5 text-xs md:text-sm">{vol.name}</h3>
-                                {vol.link && (
-                                    <a href={vol.link} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#0061FE] transition-colors mt-1">
-                                        <Linkedin size={12} />
-                                    </a>
-                                )}
-                            </motion.div>
-                        ))}
-                    </div>
+                    
                 </div>
-            </section>
+            </section> */}
 
             {/* Tagline Section */}
-            <section className="py-20 bg-black flex items-center justify-center">
+            {/* <section className="py-20 bg-black flex items-center justify-center">
                 <div className="container mx-auto px-6 text-center">
                     <h2 className="text-golden-2 md:text-golden-3 font-black text-white tracking-tighter uppercase leading-none">
                         Building Community <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0061FE] to-[#00C6F7]">Since 2023</span>
                     </h2>
                 </div>
-            </section>
+            </section> */}
 
-            {/* Footer */}
-            <footer className="bg-[#101010] text-gray-400 py-16 border-t border-gray-900">
-                <div className="container mx-auto px-6">
-                    <div className="flex flex-col md:flex-row justify-between items-start gap-12">
-                        <div className="max-w-sm">
-                            <div className="flex items-center gap-2 mb-6">
-                                <img src="https://res.cloudinary.com/druvxcll9/image/upload/v1761122530/WhatsApp_Image_2025-09-02_at_12.45.18_b15791ea_rnlwrz_3_r4kp2u.jpg" alt="CodeSapiens Logo" className="w-8 h-8 rounded-full object-cover" />
-                                <span className="text-2xl font-bold text-white tracking-tight">CodeSapiens</span>
-                            </div>
-                            <p className="text-gray-500 leading-relaxed mb-8">
-                                Empowering students to build, learn, and grow together. Join the biggest student tech community in Tamil Nadu.
-                            </p>
-                            <div className="flex gap-6">
-                                <a href="https://github.com/Codesapiens-in" className="text-gray-400 hover:text-white transition-colors"><Github size={20} /></a>
-                                <a href="https://www.linkedin.com/company/codesapiens-community/posts/" className="text-gray-400 hover:text-white transition-colors"><Linkedin size={20} /></a>
-                                <a href="https://youtube.com/@codesapiens-in?si=90EaPMYHcSZIHtMi" className="text-gray-400 hover:text-white transition-colors"><Youtube size={20} /></a>
-                                <a href="https://discord.gg/codesapiens" className="text-gray-400 hover:text-white transition-colors"><Users size={20} /></a>
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-1 gap-16">
-                            <div>
-                                <h4 className="text-white font-bold mb-6">Community</h4>
-                                <ul className="space-y-4 text-golden-1">
-                                    <li><a href="#vision" className="hover:text-[#0061FE] transition-colors">About Us</a></li>
-                                    <li><a href="#events" className="hover:text-[#0061FE] transition-colors">Events</a></li>
-                                    <li><a href="#community" className="hover:text-[#0061FE] transition-colors">Team</a></li>
-                                    <li><a href="#" className="hover:text-[#0061FE] transition-colors">Join Discord</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="mt-16 pt-8 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center text-golden-1 text-gray-600">
-                        <p>© 2025 CodeSapiens Community. All rights reserved.</p>
-                        <p>Designed & Built by Students.</p>
-                    </div>
-                </div>
-            </footer>
-            <LandingPopup />
+            {/* Footer with Taped Design */}
+            <FooterTapedDesign />
+            {/* <LandingPopup /> */}
         </div>
     );
 };

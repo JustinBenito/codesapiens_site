@@ -337,22 +337,21 @@ export default function UserDashboard() {
         {/* BENTO GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[minmax(280px,auto)]">
 
-          {/* 1. PROFILE (The "Framework" Card) - Navy Blue */}
+          {/* 1. PROFILE - Navy Blue */}
           <BentoCard
             className="col-span-1 md:col-span-2 bg-[#1E293B] text-white relative group border-none"
             onClick={(e) => handleCardClick(e, '/profile', '#1E293B')}
           >
             {(isHovered) => (
               <>
-                <FrameworkNodes />
 
                 {/* Profile Label */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[120px] font-black text-white/5 pointer-events-none select-none tracking-widest">
+                <div className="absolute justify-left items-start text-[120px] font-black text-white/5 pointer-events-none select-none tracking-widest">
                   PROFILE
                 </div>
 
                 <div className="flex justify-between items-start z-10">
-                  <div className="w-24 h-24 border-4 border-white overflow-hidden bg-white/10">
+                  <div className="w-24 h-24 rounded-2xl border-4 border-white overflow-hidden bg-white/10">
                     {userData?.avatar ? (
                       <img src={userData.avatar} alt="avatar" className="w-full h-full object-cover" />
                     ) : (
@@ -367,8 +366,6 @@ export default function UserDashboard() {
                 <div className="mt-auto z-10">
                   <h2 className="text-4xl font-bold mb-1 tracking-tight">{userData?.displayName}</h2>
                   <p className="text-white/60 text-lg mb-8 font-mono">{userData?.college || "Codesapiens Univ"}</p>
-
-
                 </div>
               </>
             )}
