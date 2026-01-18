@@ -12,6 +12,7 @@ import ThreeDFolderDemo from './ui/3d-folder';
 import FooterTapedDesign from './ui/footer-taped-design';
 import ImageTiles from './ui/image-tiles';
 import { EffectScene } from './EffectScene';
+import SecretAgentTerminal from './ui/SecretAgentTerminal';
 
 // --- Photo Stack Showcase Section ---
 const PhotoStackShowcase = () => {
@@ -656,6 +657,20 @@ const CodeSapiensHero = () => {
     const [communityPhotos, setCommunityPhotos] = useState([]);
     const [isOverHero, setIsOverHero] = useState(true);
     const heroRef = useRef(null);
+    const [hasAccess, setHasAccess] = useState(false);
+
+    // Check if user has already completed the terminal challenge
+    useEffect(() => {
+        const accessGranted = localStorage.getItem('codesapiens_access_granted');
+        if (accessGranted === 'true') {
+            setHasAccess(true);
+        }
+    }, []);
+
+    const handleAccessGranted = () => {
+        localStorage.setItem('codesapiens_access_granted', 'true');
+        setHasAccess(true);
+    };
 
     // Data Fetching
     useEffect(() => {
@@ -711,6 +726,11 @@ const CodeSapiensHero = () => {
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122531/1732031130575_b834gr_1_slc9fw.jpg", name: "Jayasurya R", link: "https://www.linkedin.com/in/jayasurya-r-b37997279/" },
         { photo: "https://i.ibb.co/fdfnxtcX/qm-copy.png", name: "YOU", link: "https://www.linkedin.com/in/sundarpichai" }
     ];
+
+    // If user hasn't completed the terminal challenge, show only the terminal
+    if (!hasAccess) {
+        return <SecretAgentTerminal onAccessGranted={handleAccessGranted} />;
+    }
 
     return (
         <div className="bg-[#F7F5F2] text-[#1E1919] min-h-screen font-sans overflow-x-hidden selection:bg-[#0061FE] selection:text-white">
@@ -801,12 +821,12 @@ const CodeSapiensHero = () => {
                                     lineHeight: '1.1'
                                 }}
                             >
-                                From Enna panrathu to <br className="" />
+                                Vaalka Adichaalum Midhichaalum <br className="" />
                                 <span
                                     className="text-white tracking-tighter italic"
                                     style={{ fontFamily: "'Instrument Serif', serif" }}
                                 >
-                                    Vaa Pannalaam
+                                    You never gave up
                                 </span>
                             </h1>
 
@@ -973,7 +993,7 @@ const CodeSapiensHero = () => {
             </section> */}
 
             {/* Team / Mafia Gang */}
-            <section id="community" className="py-8 md:py-16 bg-[#F7F5F2] dark:bg-black text-[#1E1919] dark:text-white">
+            {/* <section id="community" className="py-8 md:py-16 bg-[#F7F5F2] dark:bg-black text-[#1E1919] dark:text-white">
                 <div className="container mx-auto max-w-6xl px-6 text-center">
                     <span className="text-[#0061FE] font-bold tracking-widest uppercase text-xs md:text-sm text-golden-1 mb-2 block">Community</span>
                     <h2 className="text-2xl md:text-4xl text-golden-2 md:text-golden-3 font-bold mb-3 dark:text-white">The Mafia Gang</h2>
@@ -981,10 +1001,9 @@ const CodeSapiensHero = () => {
                         Meet the core members who run the community. We are students, just like you.
                     </p>
 
-                    {/* Team Members with Founder - All in Image Tiles */}
-                    <ImageTiles images={volunteers} />
+                    
                 </div>
-            </section>
+            </section> */}
 
             {/* Tagline Section */}
             {/* <section className="py-20 bg-black flex items-center justify-center">

@@ -14,6 +14,7 @@ tailwind.config = {
     fontFamily: {
       'script': ['Dancing Script', 'cursive'],
       'bebas': ['Bebas Neue', 'sans-serif'],
+      'pixel': ['Press Start 2P', 'monospace'],
       'body': [
         'Open Sans',
         'ui-sans-serif',
